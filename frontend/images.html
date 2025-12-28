@@ -385,7 +385,7 @@
         })();
         
         // Load saved theme
-        if (localStorage.getItem('theme') === 'light') {
+        if (localStorage.getItem('theme') === 'light' || window.matchMedia('(prefers-color-scheme: light)').matches) {
             document.body.classList.add('light-mode');
             document.querySelector('.theme-toggle').textContent = 'Dark Mode';
         }

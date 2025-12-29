@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="icon" type="image/x-icon" href="favicon.png">
     <meta charset="UTF-8">
     <script src="bangs.js"></script>
@@ -364,7 +365,7 @@
                 </svg>
             </button>
         </form>
-        <button class="theme-toggle" onclick="toggleTheme()">Light Mode</button>
+        <button class="theme-toggle" onclick="toggleTheme()"><i class="bi bi-moon"></i></button>
     </header>
     
     <main>
@@ -417,12 +418,18 @@
             body.classList.toggle('light-mode');
             
             if (body.classList.contains('light-mode')) {
-                button.textContent = 'Dark Mode';
+                button.innerHTML = '<i class="bi bi-sun"></i>';
                 localStorage.setItem('theme', 'light');
             } else {
-                button.textContent = 'Light Mode';
+                button.innerHTML = '<i class="bi bi-moon"></i>';
                 localStorage.setItem('theme', 'dark');
             }
+        }
+        
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'light' || window.matchMedia('(prefers-color-scheme: light)').matches) {
+            document.body.classList.add('light-mode');
+            document.querySelector('.theme-toggle').textContent = '<i class="bi bi-sun"></i>';
         }
         
         function matchBang(query) {
@@ -577,13 +584,7 @@
                 document.getElementById("results").innerHTML = '<p>Error loading search results. Please try again.<br>' + error + '</p>';
             }
         })();
-        
-        // Load saved theme
-        if (localStorage.getItem('theme') === 'light' || window.matchMedia('(prefers-color-scheme: light)').matches) {
-            document.body.classList.add('light-mode');
-            document.querySelector('.theme-toggle').textContent = 'Dark Mode';
-        }
-        
+         
         if (query) {
             document.title = query + " | nilch";
             document.getElementById('searchInput').value = query;

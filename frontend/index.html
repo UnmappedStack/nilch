@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="icon" type="image/x-icon" href="favicon.png">
     <script src="bangs.js"></script>
     <meta charset="UTF-8">
@@ -195,7 +196,7 @@
     </style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()">Light Mode</button>
+    <button class="theme-toggle" onclick="toggleTheme()"><i class="bi bi-moon"></i></button>
     <div class="logo">nilch</div>
     <div class="search-container">
         <form class="search-form" onsubmit="return handleSearch(event)">
@@ -217,10 +218,10 @@
             body.classList.toggle('light-mode');
             
             if (body.classList.contains('light-mode')) {
-                button.textContent = 'Dark Mode';
+                button.innerHTML = '<i class="bi bi-sun"></i>';
                 localStorage.setItem('theme', 'light');
             } else {
-                button.textContent = 'Light Mode';
+                button.innerHTML = '<i class="bi bi-moon"></i>';
                 localStorage.setItem('theme', 'dark');
             }
         }
@@ -228,7 +229,7 @@
         // Load saved theme
         if (localStorage.getItem('theme') === 'light' || window.matchMedia('(prefers-color-scheme: light)').matches) {
             document.body.classList.add('light-mode');
-            document.querySelector('.theme-toggle').textContent = 'Dark Mode';
+            document.querySelector('.theme-toggle').textContent = '<i class="bi bi-sun"></i>';
         }
         
         function handleSearch(e) {

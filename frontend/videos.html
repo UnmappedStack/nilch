@@ -400,10 +400,6 @@
             width: 20px;
         }
 
-        .light-mode [type="search"]::-webkit-search-cancel-button {
-            background-color: #000000;
-        }
-
         .pagination-container {
             display: flex;
             justify-content: center;
@@ -497,9 +493,12 @@
         const encodedQuery = encodeURIComponent(query);
         const page = parseInt(urlParams.get('page') || "0");
         
+        // hitting the api raw, no proxies needed
         async function getUrlContents(url) {
-            const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=';
-            const response = await fetch(proxyUrl + encodeURIComponent(url));
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Network response failure: ${response.status}`);
+            }
             return await response.text();
         }
         
@@ -559,10 +558,18 @@
             container.className = "pagination-container";
             const list = document.createElement("ul");
             list.className = "pagination";
+            
+            // Get current params to modify them safely
+            const currentParams = new URLSearchParams(window.location.search);
+
             for (let i = 0; i <= totalPages; i++) {
                 const li = document.createElement("li");
                 const a = document.createElement("a");
-                a.href = window.location.href + "&page=" + i;
+                
+                // UPDATE THE PARAMETER, DON'T APPEND
+                currentParams.set('page', i);
+                a.href = window.location.pathname + '?' + currentParams.toString();
+                
                 a.textContent = i + 1;
                 a.className = "page-btn";
                 if (i === currentPage) {
@@ -572,7 +579,10 @@
                 list.appendChild(li);
             }
             container.appendChild(list);
-            const results = document.getElementById("videoResults");
+            
+            // Select the correct container based on the file
+            const targetId = document.getElementById("videoResults") ? "videoResults" : "results";
+            const results = document.getElementById(targetId);
             results.insertAdjacentElement("afterend", container);
         }
 
@@ -583,13 +593,12 @@
                                 + "&safe=" + safeSearch + "&page=" + page;
                 const resultsResponse = await getUrlContents(url);
                 if (resultsResponse == "noquery") {
-                    document.getElementById("results").innerHTML = '<p>There was an error, please try again: noquery</p>';
+                    document.getElementById("videoResults").innerHTML = '<p>There was an error, please try again: noquery</p>';
                     return;
                 } else if (resultsResponse == "noresults") {
                     document.location.reload();
                 }
                 const resultsData = JSON.parse(resultsResponse).results; // Parse the JSON string
-                const results = document.getElementById("results");
                 
                 const container = document.getElementById("videoResults");
                 container.innerHTML = "";
@@ -639,7 +648,7 @@
                 createPagination();
             } catch (error) {
                 console.error('Error loading search results:', error);
-                document.getElementById("results").innerHTML = '<p>Error loading search results. Please try again.<br>' + error + '</p>';
+                document.getElementById("videoResults").innerHTML = '<p>Error loading search results. Please try again.<br>' + error + '</p>';
             }
         })();
         
@@ -672,3 +681,4 @@
         })();
     </script>
 </body>
+</html>

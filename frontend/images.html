@@ -310,6 +310,7 @@
         </div>
     </main>
 
+    <script src="config.js"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const safeSearch = urlParams.get('safe') || "strict";
@@ -318,8 +319,7 @@
         const results = document.getElementById("results");
         
         async function getUrlContents(url) {
-            const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=';
-            const response = await fetch(proxyUrl + encodeURIComponent(url));
+            const response = await fetch(url);
             return await response.text();
         }
         
@@ -370,7 +370,7 @@
         // Wrap async code in IIFE
         (async function() {
             try {
-                const url = "https://unmappedstack.pythonanywhere.com/api/images?q=" + encodedQuery
+                const url = API_BASE + "/api/images?q=" + encodedQuery
                                 + "&safe=" + safeSearch;
                 const response = await getUrlContents(url);
                 if (response == "noquery") {

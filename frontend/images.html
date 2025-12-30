@@ -300,7 +300,14 @@
         </div>
 
         <div class="image-grid" id="results">
-            </div>
+            <!--<div class="image-item">
+                <a href="#">
+                    <div class="image-wrapper">
+                        <img src="https://placehold.co/300x200" alt="Placeholder">
+                    </div>
+                </a>
+            </div>-->
+        </div>
     </main>
 
     <script>
@@ -310,12 +317,9 @@
         const encodedQuery = encodeURIComponent(query);
         const results = document.getElementById("results");
         
-        // hitting the api raw, no proxies needed
         async function getUrlContents(url) {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Network response failure: ${response.status}`);
-            }
+            const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=';
+            const response = await fetch(proxyUrl + encodeURIComponent(url));
             return await response.text();
         }
         

@@ -438,10 +438,23 @@
         <div class="infobox" id="infobox">
             <div class="infobox-title" id="infobox-title"></div>
             <div class="infobox-content">
-                </div>
+                <!--<div class="infobox-item">
+                        <div class="infobox-label">Type</div>
+                        <div>Sample Category</div>
+                </div>-->
+            </div>
         </div>
         <div id="results">
-            </div>
+            <!-- <div class="result">
+                <div class="result-title">
+                    <a href="#">Example Search Result Title</a>
+                </div>
+                <div class="result-url">https://example.com/page</div>
+                <div class="result-snippet">
+                    This is the description part
+                </div>
+            </div> -->
+        </div>
     </main>
 
     <script>
@@ -452,12 +465,9 @@
         const encodedQuery = encodeURIComponent(query);
         const page = parseInt(urlParams.get('page') || "0");
         
-        // hitting the api raw, no proxies needed
         async function getUrlContents(url) {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Network response failure: ${response.status}`);
-            }
+            const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=';
+            const response = await fetch(proxyUrl + encodeURIComponent(url));
             return await response.text();
         }
         
@@ -517,18 +527,10 @@
             container.className = "pagination-container";
             const list = document.createElement("ul");
             list.className = "pagination";
-            
-            // Get current params to modify them safely
-            const currentParams = new URLSearchParams(window.location.search);
-
             for (let i = 0; i <= totalPages; i++) {
                 const li = document.createElement("li");
                 const a = document.createElement("a");
-                
-                // UPDATE THE PARAMETER, DON'T APPEND
-                currentParams.set('page', i);
-                a.href = window.location.pathname + '?' + currentParams.toString();
-                
+                a.href = window.location.href + "&page=" + i;
                 a.textContent = i + 1;
                 a.className = "page-btn";
                 if (i === currentPage) {
@@ -538,10 +540,7 @@
                 list.appendChild(li);
             }
             container.appendChild(list);
-            
-            // Select the correct container based on the file
-            const targetId = document.getElementById("videoResults") ? "videoResults" : "results";
-            const results = document.getElementById(targetId);
+            const results = document.getElementById("results");
             results.insertAdjacentElement("afterend", container);
         }
 

@@ -6,12 +6,15 @@ nilch uses the Brave search API internally for results.
 
 ## Local development
 
-1. Install dependencies.
-   - `python -m venv .venv && source .venv/bin/activate`
-   - `pip install fastapi[standard] requests uvicorn`
-2. Set `BRAVE_SEARCH_API_KEYS` (comma-separated if you have multiple keys).
-3. Start the API server: `python backend/cli.py --debug`.
-4. Open `frontend/index.html` in a browser. If needed, update `frontend/config.js` to match the API host/port.
+1. Create and activate a venv with uv.
+   - `uv venv`
+   - `source .venv/bin/activate`
+2. Install dependencies.
+   - `uv sync`
+   - (or `pip install fastapi[standard] requests uvicorn`)
+3. Set `BRAVE_SEARCH_API_KEYS` (comma-separated if you have multiple keys).
+4. Start the API server: `python -m backend.cli --port <port> --debug`.
+5. Open `frontend/index.html` in a browser. If needed, update `frontend/config.js` to match the API host/port.
 
 ## Tests
 

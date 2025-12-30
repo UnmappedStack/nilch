@@ -457,6 +457,7 @@
         </div>
     </main>
 
+    <script src="config.js"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const safeSearch = urlParams.get('safe') || "strict";
@@ -466,8 +467,7 @@
         const page = parseInt(urlParams.get('page') || "0");
         
         async function getUrlContents(url) {
-            const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=';
-            const response = await fetch(proxyUrl + encodeURIComponent(url));
+            const response = await fetch(url);
             return await response.text();
         }
         
@@ -547,7 +547,7 @@
         // Wrap all async code in an IIFE
         (async function() {
             try {
-                const url = "https://unmappedstack.pythonanywhere.com/api/search?q=" + encodedQuery
+                const url = API_BASE + "/api/search?q=" + encodedQuery
                                 + "&safe=" + safeSearch + "&page=" + page;
                 const resultsResponse = await getUrlContents(url);
                 if (resultsResponse == "noquery") {

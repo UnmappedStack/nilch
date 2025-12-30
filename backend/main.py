@@ -6,6 +6,7 @@ the domain services (SearchCache, BraveClient, InfoboxResolver) to handle
 search and image requests.
 """
 
+import os
 import re
 from typing import List, Dict, Optional, Union, Any, TypedDict, cast
 
@@ -32,8 +33,10 @@ WIKIPEDIA_API_HEADERS: Dict[str, str] = {
 }
 
 # Whitelist strategy: Configure allowed frontend origins here.
-# Use "*" for development or specific domains ["https://myapp.com"] for production.
-CORS_ORIGINS: List[str] = ["*"]
+# loads from env var ALLOWED_ORIGINS (comma separated) or defaults to localhost
+_raw_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000")
+CORS_ORIGINS: List[str] = [origin.strip() for origin in _raw_origins.split(",")]
+
 REQUEST_TIMEOUT: int = 10  # Seconds
 
 # --
@@ -334,9 +337,9 @@ def create_app() -> Flask:
     # initializes the flask application
     application = Flask(__name__)
 
-    # wraps app with CORS to whitelist frontend origins
-    # eliminates the need for external proxy servers
-    CORS(application, resources={r"/api/*": {"origins": CORS_ORIGINS}})
+    # applies cors to allow the specific origins defined in configuration
+    # supports_credentials=True ensures cookies/headers pass correctly for the whitelisted domains
+    CORS(application, origins=CORS_ORIGINS, supports_credentials=True)
 
     return application
 
